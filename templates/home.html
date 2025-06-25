@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesture Battle - AI Gesture Recognition</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: rgba(0,0,0,0.8) !important;
+        }
+        .hero-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .btn-game {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        .btn-game:hover {
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-delay-1 { animation-delay: 0.2s; }
+        .animate-delay-2 { animation-delay: 0.4s; }
+        .animate-delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fs-3" href="{% url 'home' %}">🎮 GestureBattle AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <span class="navbar-text me-3">Welcome, {{ user.username }}!</span>
+                        <a class="nav-link" href="{% url 'ai_test' %}">Test AI</a>
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        <a class="nav-link" href="{% url 'signout' %}">Logout</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'signin' %}">Login</a>
+                        <a class="nav-link" href="{% url 'signup' %}">Join</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="hero-card card p-5 text-center">
+                    <h1 class="display-3 mb-4">🤖 AI Gesture Recognition</h1>
+                    <h2 class="h3 mb-4 text-muted">Real-time Rock Paper Scissors Detection</h2>
+                    <p class="lead mb-5">Test our advanced AI model that recognizes your hand gestures in real-time using your webcam. Show rock, paper, or scissors and see the AI detect it instantly!</p>
+                    
+                    {% if user.is_authenticated %}
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="{% url 'ai_test' %}" class="btn btn-game btn-lg">🎯 Test Real-time AI</a>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-lg">📊 View History</a>
+                        </div>
+                    {% else %}
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="{% url 'signup' %}" class="btn btn-game btn-lg">🚀 Join Now</a>
+                            <a href="{% url 'signin' %}" class="btn btn-outline-primary btn-lg">🔑 Login</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5 g-4">
+            <div class="col-md-4">
+                <div class="feature-card card h-100 p-4 text-center animate-delay-1">
+                    <div class="card-body">
+                        <div class="display-4 mb-3">📹</div>
+                        <h4>Webcam Recognition</h4>
+                        <p class="text-muted">Real-time gesture detection using your device's camera</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card card h-100 p-4 text-center animate-delay-2">
+                    <div class="card-body">
+                        <div class="display-4 mb-3">🧠</div>
+                        <h4>Advanced AI Model</h4>
+                        <p class="text-muted">Powered by state-of-the-art CNN from Hugging Face</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card card h-100 p-4 text-center animate-delay-3">
+                    <div class="card-body">
+                        <div class="display-4 mb-3">⚡</div>
+                        <h4>Instant Results</h4>
+                        <p class="text-muted">Get immediate feedback with confidence scores</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
